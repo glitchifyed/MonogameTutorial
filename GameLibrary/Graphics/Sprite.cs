@@ -12,6 +12,7 @@ namespace GameLibrary.Graphics
         public TextureRegion Region { get; set; }
         public Color Color { get; set; } = Color.White;
 
+        public Vector2 Position { get; set; } = Vector2.Zero;
         public Vector2 Origin { get; set; } = new Vector2(0.5f, 0.5f);
         public Vector2 Scale { get; set; } = Vector2.One;
         public float Rotation { get; set; } = 0f;
@@ -31,6 +32,6 @@ namespace GameLibrary.Graphics
         }
 
 
-        public void Draw(SpriteBatch spriteBatch, Vector2 position) => Region.Draw(spriteBatch, position, new Vector2(Origin.X * Region.Width, Origin.Y * Region.Height), Color, Scale, Rotation, Depth, Effects);
+        public void Draw(SpriteBatch spriteBatch) => Region.Draw(spriteBatch, Position, new Vector2(Origin.X * Region.Width, Origin.Y * Region.Height), Color, Scale, Rotation, Depth, Effects);
     }
 }

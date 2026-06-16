@@ -37,6 +37,11 @@ public class Core : Game
     public static int screenWidth => s_instance.Window.ClientBounds.Width;
     public static int screenHeight => s_instance.Window.ClientBounds.Height;
 
+
+    private static float _timeSinceFixedUpdate;
+    private const float _fixedDeltaTimeMax = 1f / 60f;
+
+
     /// <summary>
     /// Creates a new Core instance.
     /// </summary>
@@ -78,7 +83,11 @@ public class Core : Game
 
         // Mouse is visible by default.
         IsMouseVisible = true;
+
+        IsFixedTimeStep = false;
+        Graphics.SynchronizeWithVerticalRetrace = true;
     }
+
 
     protected override void Initialize()
     {
@@ -91,4 +100,24 @@ public class Core : Game
         // Create the sprite batch instance.
         SpriteBatch = new SpriteBatch(GraphicsDevice);
     }
+
+
+    protected override void Update(GameTime gameTime)
+    {
+        var deltaTime = (float)gameTime.ElapsedGameTime.TotalSeconds;
+
+        _timeSinceFixedUpdate += deltaTime;
+
+        if (_timeSinceFixedUpdate >= _fixedDeltaTimeMax)
+        {
+            _timeSinceFixedUpdate %= _fixedDeltaTimeMax;
+
+            FixedUpdate(Math.Max(_fixedDeltaTimeMax, deltaTime));
+        }
+
+        base.Update(gameTime);
+    }
+
+
+    protected virtual void FixedUpdate(float deltaTime) { }
 }
