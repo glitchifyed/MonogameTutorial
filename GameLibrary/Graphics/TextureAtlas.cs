@@ -71,9 +71,9 @@ namespace GameLibrary.Graphics
         public TextureRegion GetRegion(string name) => _regions[name];
         public bool RemoveRegion(string name) => _regions.Remove(name);
 
-        public void Clear()
-        {
-            _regions.Clear();
-        }
+        public void Clear() => _regions.Clear();
+
+
+        public Sprite CreateSprite(string name) => new Sprite(GetRegion(name));
     }
 }

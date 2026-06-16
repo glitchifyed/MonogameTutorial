@@ -4,13 +4,14 @@ using Microsoft.Xna.Framework.Input;
 using GameLibrary;
 using GameLibrary.Graphics;
 using System;
+using GameLibrary.GameObjects;
 
 namespace TutorialTest;
 
 public class GameLoop : Core
 {
-    private TextureRegion _uglyRedBall;
-    private TextureRegion _uglyBlueBall;
+    private Sprite _uglyRedBall;
+    private Sprite _uglyBlueBall;
 
     public GameLoop() : base("Tutorial Game", 1920, 1080, false)
     {
@@ -33,8 +34,11 @@ public class GameLoop : Core
 
         var atlas = TextureAtlas.FromFile(Content, "images/atlas-definition.xml");
 
-        _uglyRedBall = atlas.GetRegion("uglyredball");
-        _uglyBlueBall = atlas.GetRegion("uglyblueball");
+        _uglyRedBall = atlas.CreateSprite("uglyredball");
+        _uglyBlueBall = atlas.CreateSprite("uglyblueball");
+
+        _uglyRedBall.Scale = Vector2.One * 10f;
+        _uglyBlueBall.Scale = Vector2.One * 10f;
     }
 
     protected override void Update(GameTime gameTime)
@@ -57,8 +61,8 @@ public class GameLoop : Core
 
         var elapsed = gameTime.TotalGameTime.TotalSeconds;
 
-        _uglyRedBall.Draw(SpriteBatch, new Vector2(0f, 40f * (float)Math.Sin(elapsed * 5f)), scale: 10f);
-        _uglyBlueBall.Draw(SpriteBatch, new Vector2(_uglyRedBall.Width * 10f + 25f, 50f * (float)Math.Sin(elapsed * 4f)), scale: 10f);
+        _uglyRedBall.Draw(SpriteBatch, new Vector2(0f, 40f * (float)Math.Sin(elapsed * 5f)));
+        _uglyBlueBall.Draw(SpriteBatch, new Vector2(_uglyRedBall.Width + 25f, 50f * (float)Math.Sin(elapsed * 4f)));
 
         SpriteBatch.End();
 

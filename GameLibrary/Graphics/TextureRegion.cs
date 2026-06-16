@@ -16,8 +16,6 @@ namespace GameLibrary.Graphics
         public int Height => SourceRect.Height;
 
 
-        public TextureRegion() {}
-
         public TextureRegion(Texture2D texture, int x, int y, int width, int height)
         {
             Texture = texture;
@@ -25,9 +23,9 @@ namespace GameLibrary.Graphics
         }
 
         
-        public void Draw(SpriteBatch spriteBatch, Vector2 position, Color? color = null, float scale = 1f, float rotation = 0f, float depth = 0f, SpriteEffects effects = SpriteEffects.None)
+        public void Draw(SpriteBatch spriteBatch, Vector2 position, Vector2 origin, Color? color = null, Vector2? scale = null, float rotation = 0f, float depth = 0f, SpriteEffects effects = SpriteEffects.None)
         {
-            spriteBatch.Draw(Texture, position + new Vector2(Core.screenWidth * 0.5f, Core.screenHeight * 0.5f), SourceRect, color ?? Color.White, rotation, new Vector2(Width * 0.5f, Height * 0.5f), scale, effects, depth);
+            spriteBatch.Draw(Texture, position + new Vector2(Core.screenWidth * 0.5f, Core.screenHeight * 0.5f), SourceRect, color ?? Color.White, rotation, origin, scale ?? Vector2.One, effects, depth);
         }
     }
 }
