@@ -1,0 +1,8 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TextureAtlas>
+    <Texture>images/ballatlas</Texture>
+    <Regions>
+        <Region name="uglyredball" x="0" y="0" width="16" height="16" />
+        <Region name="uglyblueball" x="16" y="0" width="16" height="16" />
+    </Regions>
+</TextureAtlas>

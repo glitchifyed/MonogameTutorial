@@ -1,0 +1,33 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
+
+namespace GameLibrary.Graphics
+{
+    public class TextureRegion
+    {
+        public Texture2D Texture { get; set; }
+        public Rectangle SourceRect { get; set; }
+
+        public int Width => SourceRect.Width;
+        public int Height => SourceRect.Height;
+
+
+        public TextureRegion() {}
+
+        public TextureRegion(Texture2D texture, int x, int y, int width, int height)
+        {
+            Texture = texture;
+            SourceRect = new Rectangle(x, y, width, height);
+        }
+
+        
+        public void Draw(SpriteBatch spriteBatch, Vector2 position, Color? color = null, float scale = 1f, float rotation = 0f, float depth = 0f, SpriteEffects effects = SpriteEffects.None)
+        {
+            spriteBatch.Draw(Texture, position + new Vector2(Core.screenWidth * 0.5f, Core.screenHeight * 0.5f), SourceRect, color ?? Color.White, rotation, new Vector2(Width * 0.5f, Height * 0.5f), scale, effects, depth);
+        }
+    }
+}
