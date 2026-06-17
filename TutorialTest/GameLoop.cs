@@ -11,12 +11,6 @@ namespace TutorialTest;
 
 public class GameLoop : Core
 {
-    private Sprite _uglyRedBall;
-    private Sprite _uglyBlueBall;
-
-    private float _giggleTicks;
-
-
     public GameLoop() : base("Tutorial Game", 1920, 1080, false)
     {
         
@@ -34,11 +28,11 @@ public class GameLoop : Core
     {
         var atlas = TextureAtlas.FromFile(Content, "images/atlas-definition.xml");
 
-        _uglyRedBall = atlas.CreateSprite("uglyredball");
-        _uglyBlueBall = atlas.CreateSprite("uglyblueball");
-
-        _uglyRedBall.Scale = Vector2.One * 10f;
-        _uglyBlueBall.Scale = Vector2.One * 10f;
+        for (int i = 0; i < 10; i++)
+        {
+            var ball = GameObject.Translatable($"Ball {i + 1}", GameRoot, new SpriteRenderer(atlas.CreateSprite("uglyredball")));
+            ball.Scale = Vector2.One * 3f;
+        }
     }
 
     protected override void Update(GameTime gameTime)
@@ -48,22 +42,19 @@ public class GameLoop : Core
 
         var elapsed = gameTime.TotalGameTime.TotalSeconds;
 
-        _uglyRedBall.Position = new Vector2(0f, 40f * (float)Math.Sin(elapsed * 5f));
-        _uglyBlueBall.Position = new Vector2(_uglyRedBall.Width + 25f, 50f * (float)Math.Sin(elapsed * 4f));
+        for (var i = 0; i < GameRoot.Children.Count; i++)
+        {
+            var child = (TranslatableGameObject)GameRoot.Children[i];
+
+            child.Position = new Vector2((i - 4.5f) * 16f * (child.Scale.X + 0.5f), (float)Math.Sin(elapsed * 5f + i) * 20f);
+        }
 
         base.Update(gameTime);
     }
 
     protected override void FixedUpdate(float deltaTime)
     {
-        _giggleTicks += deltaTime;
-
-        if (_giggleTicks >= 1f)
-        {
-            _giggleTicks %= 1f;
-
-            Console.WriteLine("One second passed");
-        }
+        
     }
 
     protected override void Draw(GameTime gameTime)
@@ -72,8 +63,7 @@ public class GameLoop : Core
 
         SpriteBatch.Begin(samplerState: SamplerState.PointClamp);
 
-        _uglyRedBall.Draw(SpriteBatch);
-        _uglyBlueBall.Draw(SpriteBatch);
+        DrawSprites(SpriteBatch, GameRoot);
 
         SpriteBatch.End();
 

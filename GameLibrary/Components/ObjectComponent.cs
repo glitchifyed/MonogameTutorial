@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using GameLibrary.GameObjects;
+using Microsoft.Xna.Framework;
 
 namespace GameLibrary.Components
 {
@@ -18,5 +19,8 @@ namespace GameLibrary.Components
 
             GameObject = gameObject;
         }
+
+
+        public abstract void OnTranslationUpdate(Vector2? position, Vector2? scale, float? rotation);
     }
 }

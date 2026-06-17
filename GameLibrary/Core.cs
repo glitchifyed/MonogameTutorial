@@ -1,4 +1,6 @@
 using System;
+using GameLibrary.Components;
+using GameLibrary.GameObjects;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
@@ -34,9 +36,12 @@ public class Core : Game
     /// </summary>
     public static new ContentManager Content { get; private set; }
 
-    public static int screenWidth => s_instance.Window.ClientBounds.Width;
-    public static int screenHeight => s_instance.Window.ClientBounds.Height;
+    public static int ScreenWidth => s_instance.Window.ClientBounds.Width;
+    public static int ScreenHeight => s_instance.Window.ClientBounds.Height;
 
+    public static float ScreenScale => Math.Min(ScreenWidth * (9f / 16f), ScreenHeight) / 360f;
+
+    public static GameObject GameRoot { get; private set; }
 
     private static float _timeSinceFixedUpdate;
     private const float _fixedDeltaTimeMax = 1f / 60f;
@@ -81,11 +86,16 @@ public class Core : Game
         // Set the root directory for content.
         Content.RootDirectory = "Content";
 
+        Window.AllowUserResizing = true;
+
         // Mouse is visible by default.
         IsMouseVisible = true;
 
         IsFixedTimeStep = false;
         Graphics.SynchronizeWithVerticalRetrace = true;
+
+        //GameRoot = new("Root");
+        GameRoot = GameObject.Create("Root");
     }
 
 
@@ -120,4 +130,15 @@ public class Core : Game
 
 
     protected virtual void FixedUpdate(float deltaTime) { }
+
+
+    protected void DrawSprites(SpriteBatch spriteBatch, GameObject gameObject)
+    {
+        foreach (var child in gameObject.Children)
+            DrawSprites(spriteBatch, child);
+        
+        var spriteRenderer = gameObject.GetComponent<SpriteRenderer>();
+        
+        spriteRenderer?.Sprite?.Draw(spriteBatch);
+    }
 }

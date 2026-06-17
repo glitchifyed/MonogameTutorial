@@ -32,6 +32,11 @@ namespace GameLibrary.Graphics
         }
 
 
-        public void Draw(SpriteBatch spriteBatch) => Region.Draw(spriteBatch, Position, new Vector2(Origin.X * Region.Width, Origin.Y * Region.Height), Color, Scale, Rotation, Depth, Effects);
+        public void Draw(SpriteBatch spriteBatch)
+        {
+            var screenScale = Core.ScreenScale;
+
+            Region.Draw(spriteBatch, Position * screenScale, new Vector2(Origin.X * Region.Width, Origin.Y * Region.Height), Color, Scale * screenScale, Rotation, Depth, Effects);
+        }
     }
 }

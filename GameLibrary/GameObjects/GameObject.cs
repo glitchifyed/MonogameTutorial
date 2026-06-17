@@ -39,10 +39,36 @@ namespace GameLibrary.GameObjects
         public IReadOnlyList<ObjectComponent> Components => _components;
 
 
-        public GameObject(string name = "New GameObject", GameObject parent = null)
+        // public GameObject(string name = "New GameObject", GameObject parent = null, params ObjectComponent[] components)
+        // {
+        //     Name = name;
+        //     Parent = parent;
+
+        //     foreach (var component in components)
+        //         AddComponent(component);
+        // }
+
+        public static T Create<T>(string name = "New GameObject", GameObject parent = null, params ObjectComponent[] components) where T : GameObject
         {
-            Name = name;
-            Parent = parent;
+            var gameObject = Activator.CreateInstance<T>();
+
+            gameObject.Name = name;
+            gameObject.Parent = parent;
+
+            foreach (var component in components)
+                gameObject.AddComponent(component);
+            
+            return gameObject;
+        }
+
+        public static GameObject Create(string name = "New GameObject", GameObject parent = null, params ObjectComponent[] components) => Create<GameObject>(name, parent, components);
+        public static TranslatableGameObject Translatable(string name = "New GameObject", GameObject parent = null, params ObjectComponent[] components) => Create<TranslatableGameObject>(name, parent, components);
+
+
+        private void AddComponentInternal(ObjectComponent component)
+        {
+            component.SetGameObject(this);
+            _components.Add(component);
         }
 
 
@@ -86,8 +112,17 @@ namespace GameLibrary.GameObjects
 
             var component = Activator.CreateInstance<T>();
 
-            component.SetGameObject(this);
-            _components.Add(component);
+            AddComponentInternal(component);
+
+            return component;
+        }
+
+        public T AddComponent<T>(T component) where T : ObjectComponent
+        {
+            if (HasComponent<T>())
+                throw new InvalidOperationException($"Cannot add component of type '{typeof(T).FullName}' to '{GetType().FullName}' named '{Name}', as it already exists");
+            
+            AddComponentInternal(component);
 
             return component;
         }
@@ -97,6 +132,18 @@ namespace GameLibrary.GameObjects
             var component = GetComponent<T>() ?? throw new InvalidOperationException($"Cannot remove component of type '{typeof(T).FullName}' from '{GetType().FullName}' named '{Name}', as it doesn't currently exist");
 
             _components.Remove(component);
+        }
+
+
+        public void Destroy()
+        {
+            foreach (var child in _children)
+                child.Destroy();
+            
+            _children.Clear();
+            _components.Clear();
+
+            Parent = null;
         }
 
 
