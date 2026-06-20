@@ -36,15 +36,18 @@ public class Core : Game
     /// </summary>
     public static new ContentManager Content { get; private set; }
 
-    public static int ScreenWidth => s_instance.Window.ClientBounds.Width;
-    public static int ScreenHeight => s_instance.Window.ClientBounds.Height;
+    public static int ScreenWidth => Graphics.GraphicsDevice.Viewport.Width;
+    public static int ScreenHeight => Graphics.GraphicsDevice.Viewport.Height;
 
-    public static float ScreenScale => Math.Min(ScreenWidth * (9f / 16f), ScreenHeight) / 360f;
+    public static int VirtualScreenWidth { get; } = 640;
+    public static int VirtualScreenHeight { get; } = 360;
+    
+    public static float ScreenScale => Math.Min(ScreenWidth * (9f / 16f), ScreenHeight) / VirtualScreenHeight;
 
     public static GameObject GameRoot { get; private set; }
 
-    private static float _timeSinceFixedUpdate;
-    private const float _fixedDeltaTimeMax = 1f / 60f;
+    private static float _timeSinceFixedUpdate { get; set; }
+    private static float _fixedDeltaTimeMax { get; } = 1f / 60f;
 
 
     /// <summary>
@@ -132,13 +135,26 @@ public class Core : Game
     protected virtual void FixedUpdate(float deltaTime) { }
 
 
-    protected void DrawSprites(SpriteBatch spriteBatch, GameObject gameObject)
+    
+
+    protected void DrawSprites(SpriteBatch spriteBatch, GameObject gameObject, Vector2? parentalOffset = null, Vector2? parentalScale = null, float parentalRotation = 0f)
     {
-        foreach (var child in gameObject.Children)
-            DrawSprites(spriteBatch, child);
+        // TODO: Draw in order of textures to optimise (in order of TextureAtlas)?
+        //      For this optimisation I'd have to figure out a better way of getting the parental offset..
+        //      That's future me's problem!
         
         var spriteRenderer = gameObject.GetComponent<SpriteRenderer>();
-        
-        spriteRenderer?.Sprite?.Draw(spriteBatch);
+        spriteRenderer?.Sprite?.Draw(spriteBatch, parentalOffset, parentalScale, parentalRotation);
+
+        // TODO: Instead of just doing this for the sprites, calculate this for all the children inside a parent, so these values may be used for every component.
+        if (gameObject is TranslatableGameObject translatableGameObject)
+        {
+            parentalOffset = (parentalOffset ?? Vector2.Zero) + Vector2.Rotate(translatableGameObject.Position, parentalRotation);
+            parentalScale = (parentalScale ?? Vector2.Zero) + translatableGameObject.Scale;
+            parentalRotation += translatableGameObject.Rotation;
+        }
+
+        foreach (var child in gameObject.Children)
+            DrawSprites(spriteBatch, child, parentalOffset, parentalScale, parentalRotation);
     }
 }
