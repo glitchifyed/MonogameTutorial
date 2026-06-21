@@ -39,15 +39,6 @@ namespace GameLibrary.GameObjects
         public IReadOnlyList<ObjectComponent> Components => _components;
 
 
-        // public GameObject(string name = "New GameObject", GameObject parent = null, params ObjectComponent[] components)
-        // {
-        //     Name = name;
-        //     Parent = parent;
-
-        //     foreach (var component in components)
-        //         AddComponent(component);
-        // }
-
         public static T Create<T>(string name = "New GameObject", GameObject parent = null, params ObjectComponent[] components) where T : GameObject
         {
             var gameObject = Activator.CreateInstance<T>();

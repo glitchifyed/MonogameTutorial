@@ -30,13 +30,11 @@ namespace GameLibrary.Graphics
             => Region = region;
 
 
-        public void Draw(SpriteBatch spriteBatch, Vector2? offsetPosition = null, Vector2? offsetScale = null, float offsetRotation = 0f)
+        public void Draw(SpriteBatch spriteBatch)
         {
             var screenScale = Core.ScreenScale;
 
-            var realOffsetScale = offsetScale ?? Vector2.One;
-
-            Region.Draw(spriteBatch, (Vector2.Rotate(Position, offsetRotation) * realOffsetScale + (offsetPosition ?? Vector2.Zero)) * screenScale, new Vector2(Origin.X * Region.Width, Origin.Y * Region.Height), Color, Scale * realOffsetScale * screenScale, Rotation + offsetRotation, Depth, Effects);
+            Region.Draw(spriteBatch, Position * screenScale, new Vector2(Origin.X * Region.Width, Origin.Y * Region.Height), Color, Scale * screenScale, Rotation, Depth, Effects);
         }
     }
 }

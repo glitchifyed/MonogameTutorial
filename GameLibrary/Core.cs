@@ -137,24 +137,16 @@ public class Core : Game
 
     
 
-    protected void DrawSprites(SpriteBatch spriteBatch, GameObject gameObject, Vector2? parentalOffset = null, Vector2? parentalScale = null, float parentalRotation = 0f)
+    protected void DrawSprites(SpriteBatch spriteBatch, GameObject gameObject)
     {
         // TODO: Draw in order of textures to optimise (in order of TextureAtlas)?
         //      For this optimisation I'd have to figure out a better way of getting the parental offset..
         //      That's future me's problem!
         
         var spriteRenderer = gameObject.GetComponent<SpriteRenderer>();
-        spriteRenderer?.Sprite?.Draw(spriteBatch, parentalOffset, parentalScale, parentalRotation);
-
-        // TODO: Instead of just doing this for the sprites, calculate this for all the children inside a parent, so these values may be used for every component.
-        if (gameObject is TranslatableGameObject translatableGameObject)
-        {
-            parentalOffset = (parentalOffset ?? Vector2.Zero) + Vector2.Rotate(translatableGameObject.Position, parentalRotation);
-            parentalScale = (parentalScale ?? Vector2.Zero) + translatableGameObject.Scale;
-            parentalRotation += translatableGameObject.Rotation;
-        }
+        spriteRenderer?.Sprite?.Draw(spriteBatch);
 
         foreach (var child in gameObject.Children)
-            DrawSprites(spriteBatch, child, parentalOffset, parentalScale, parentalRotation);
+            DrawSprites(spriteBatch, child);
     }
 }
