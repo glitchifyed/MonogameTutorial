@@ -45,6 +45,7 @@ public class Core : Game
     public static float ScreenScale => Math.Min(ScreenWidth * (9f / 16f), ScreenHeight) / VirtualScreenHeight;
 
     public static GameObject GameRoot { get; private set; }
+    public static Camera Camera { get; private set; }
 
     private static float _timeSinceFixedUpdate { get; set; }
     private static float _fixedDeltaTimeMax { get; } = 1f / 60f;
@@ -69,12 +70,13 @@ public class Core : Game
         s_instance = this;
 
         // Create a new graphics device manager.
-        Graphics = new GraphicsDeviceManager(this);
-
-        // Set the graphics defaults.
-        Graphics.PreferredBackBufferWidth = width;
-        Graphics.PreferredBackBufferHeight = height;
-        Graphics.IsFullScreen = fullScreen;
+        Graphics = new GraphicsDeviceManager(this)
+        {
+            // Set the graphics defaults.
+            PreferredBackBufferWidth = width,
+            PreferredBackBufferHeight = height,
+            IsFullScreen = fullScreen
+        };
 
         // Apply the graphic presentation changes.
         Graphics.ApplyChanges();
@@ -97,8 +99,8 @@ public class Core : Game
         IsFixedTimeStep = false;
         Graphics.SynchronizeWithVerticalRetrace = true;
 
-        //GameRoot = new("Root");
         GameRoot = GameObject.Create("Root");
+        Camera = GameObject.Create<Camera>("MainCamera", GameRoot);
     }
 
 
@@ -139,6 +141,9 @@ public class Core : Game
 
     protected void DrawSprites(SpriteBatch spriteBatch, GameObject gameObject)
     {
+        if (!gameObject.Active)
+            return;
+        
         // TODO: Draw in order of textures to optimise (in order of TextureAtlas)?
         //      For this optimisation I'd have to figure out a better way of getting the parental offset..
         //      That's future me's problem!

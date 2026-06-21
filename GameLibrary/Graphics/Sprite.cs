@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using GameLibrary.GameObjects;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
@@ -32,9 +33,13 @@ namespace GameLibrary.Graphics
 
         public void Draw(SpriteBatch spriteBatch)
         {
-            var screenScale = Core.ScreenScale;
+            var camera = Camera.Main;
+            if (camera == null)
+                return;
 
-            Region.Draw(spriteBatch, Position * screenScale, new Vector2(Origin.X * Region.Width, Origin.Y * Region.Height), Color, Scale * screenScale, Rotation, Depth, Effects);
+            var screenScale = Core.ScreenScale * camera.Zoom;
+
+            Region.Draw(spriteBatch, (Vector2.Rotate(Position, -camera.GlobalRotation) - camera.GlobalPosition) * screenScale, new Vector2(Origin.X * Region.Width, Origin.Y * Region.Height), Color, Scale * screenScale, Rotation - camera.GlobalRotation, Depth, Effects);
         }
     }
 }

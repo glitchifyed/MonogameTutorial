@@ -15,6 +15,8 @@ namespace GameLibrary.GameObjects
 
         public string Name { get; set; }
 
+        public bool Active { get; set; } = true;
+
         public GameObject Parent
         {
             get;
@@ -79,6 +81,8 @@ namespace GameLibrary.GameObjects
 
             foreach (var component in components)
                 gameObject.AddComponent(component);
+            
+            gameObject.OnCreated();
             
             return gameObject;
         }
@@ -165,10 +169,14 @@ namespace GameLibrary.GameObjects
             _components.Clear();
 
             Parent = null;
+
+            OnDestroyed();
         }
 
 
         protected virtual void OnParentChanged(GameObject oldParent, GameObject newParent) { }
+        protected virtual void OnCreated() { }
+        protected virtual void OnDestroyed() { }
 
 
         // Translation
@@ -195,7 +203,7 @@ namespace GameLibrary.GameObjects
                 return;
             
             field = value;
-            
+
             UpdateGlobalTranslation(AncestralPosition, AncestralScale, AncestralRotation);
         }
     }
