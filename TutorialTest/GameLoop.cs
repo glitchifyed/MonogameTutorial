@@ -50,7 +50,7 @@ public class GameLoop : Core
             child.Position = new Vector2((i - 4.5f) * 16f * (child.Scale.X + 0.5f), (float)Math.Sin(elapsed * 5f + i) * 20f);
         }
 
-        _ballParent.Position = new Vector2((float)Math.Sin(elapsed * 2.5f) * 25f, 0f);
+        _ballParent.Position = new Vector2((float)Math.Sin(elapsed * 2.5f) * 100f, 0f);
         _ballParent.Rotation = (float)(elapsed * 0.25f % 4f * Math.PI * 0.5f);
 
         base.Update(gameTime);

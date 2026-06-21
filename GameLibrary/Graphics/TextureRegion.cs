@@ -24,8 +24,6 @@ namespace GameLibrary.Graphics
 
         
         public void Draw(SpriteBatch spriteBatch, Vector2 position, Vector2 origin, Color? color = null, Vector2? scale = null, float rotation = 0f, float depth = 0f, SpriteEffects effects = SpriteEffects.None)
-        {
-            spriteBatch.Draw(Texture, position + new Vector2(Core.ScreenWidth, Core.ScreenHeight) * 0.5f, SourceRect, color ?? Color.White, rotation, origin, scale ?? Vector2.One, effects, depth);
-        }
+            => spriteBatch.Draw(Texture, position + new Vector2(Core.ScreenWidth, Core.ScreenHeight) * 0.5f, SourceRect, color ?? Color.White, rotation, origin, scale ?? Vector2.One, effects, depth);
     }
 }

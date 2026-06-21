@@ -45,44 +45,20 @@ namespace GameLibrary.GameObjects
         {
             get;
 
-            set
-            {
-                if (field == value)
-                    return;
-
-                field = value;
-
-                SendTranslationUpdate();
-            }
+            set => SetTranslationProperty(ref field, value);
         } = Vector2.Zero;
         public Vector2 Scale
         {
             get;
 
-            set
-            {
-                if (field == value)
-                    return;
-
-                field = value;
-
-                SendTranslationUpdate();
-            }
+            set => SetTranslationProperty(ref field, value);
         } = Vector2.One;
         
         public float Rotation
         {
             get;
 
-            set
-            {
-                if (field == value)
-                    return;
-
-                field = value;
-
-                SendTranslationUpdate();
-            }
+            set => SetTranslationProperty(ref field, value);
         } = 0f;
 
         public Vector2 AncestralPosition { get; private set; } = Vector2.Zero;
@@ -206,18 +182,21 @@ namespace GameLibrary.GameObjects
             GlobalScale = parentalScale * Scale;
             GlobalRotation = parentalRotation + Rotation;
 
-            foreach (var child in _children)
-            {
-                
-            }
-        }
-
-        private void SendTranslationUpdate()
-        {
-            UpdateGlobalTranslation(AncestralPosition, AncestralScale, AncestralRotation);
-
             foreach (var component in Components)
                 component.OnTranslationUpdate(GlobalPosition, GlobalScale, GlobalRotation);
+
+            foreach (var child in _children)
+                child.UpdateGlobalTranslation(GlobalPosition, GlobalScale, GlobalRotation);
+        }
+
+        private void SetTranslationProperty<T>(ref T field, T value)
+        {
+            if (EqualityComparer<T>.Default.Equals(field, value))
+                return;
+            
+            field = value;
+            
+            UpdateGlobalTranslation(AncestralPosition, AncestralScale, AncestralRotation);
         }
     }
 }
