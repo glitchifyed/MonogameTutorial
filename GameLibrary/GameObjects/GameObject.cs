@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using GameLibrary.Components;
+using Microsoft.Xna.Framework;
 
 namespace GameLibrary.GameObjects
 {
@@ -39,6 +40,60 @@ namespace GameLibrary.GameObjects
         public IReadOnlyList<ObjectComponent> Components => _components;
 
 
+        // Translation components
+        public Vector2 Position
+        {
+            get;
+
+            set
+            {
+                if (field == value)
+                    return;
+
+                field = value;
+
+                SendTranslationUpdate();
+            }
+        } = Vector2.Zero;
+        public Vector2 Scale
+        {
+            get;
+
+            set
+            {
+                if (field == value)
+                    return;
+
+                field = value;
+
+                SendTranslationUpdate();
+            }
+        } = Vector2.One;
+        
+        public float Rotation
+        {
+            get;
+
+            set
+            {
+                if (field == value)
+                    return;
+
+                field = value;
+
+                SendTranslationUpdate();
+            }
+        } = 0f;
+
+        public Vector2 AncestralPosition { get; private set; } = Vector2.Zero;
+        public Vector2 AncestralScale { get; private set; } = Vector2.One;
+        public float AncestralRotation { get; private set; } = 0f;
+
+        public Vector2 GlobalPosition { get; private set; } = Vector2.Zero;
+        public Vector2 GlobalScale { get; private set; } = Vector2.One;
+        public float GlobalRotation { get; private set; } = 0f;
+
+
         public static T Create<T>(string name = "New GameObject", GameObject parent = null, params ObjectComponent[] components) where T : GameObject
         {
             var gameObject = Activator.CreateInstance<T>();
@@ -53,7 +108,6 @@ namespace GameLibrary.GameObjects
         }
 
         public static GameObject Create(string name = "New GameObject", GameObject parent = null, params ObjectComponent[] components) => Create<GameObject>(name, parent, components);
-        public static TranslatableGameObject Translatable(string name = "New GameObject", GameObject parent = null, params ObjectComponent[] components) => Create<TranslatableGameObject>(name, parent, components);
 
 
         private void AddComponentInternal(ObjectComponent component)
@@ -139,5 +193,31 @@ namespace GameLibrary.GameObjects
 
 
         protected virtual void OnParentChanged(GameObject oldParent, GameObject newParent) { }
+
+
+        // Translation
+        private void UpdateGlobalTranslation(Vector2 parentalPosition, Vector2 parentalScale, float parentalRotation)
+        {
+            AncestralPosition = parentalPosition;
+            AncestralScale = parentalScale;
+            AncestralRotation = parentalRotation;
+
+            GlobalPosition = parentalPosition + Vector2.Rotate(Position * parentalScale, parentalRotation);
+            GlobalScale = parentalScale * Scale;
+            GlobalRotation = parentalRotation + Rotation;
+
+            foreach (var child in _children)
+            {
+                
+            }
+        }
+
+        private void SendTranslationUpdate()
+        {
+            UpdateGlobalTranslation(AncestralPosition, AncestralScale, AncestralRotation);
+
+            foreach (var component in Components)
+                component.OnTranslationUpdate(GlobalPosition, GlobalScale, GlobalRotation);
+        }
     }
 }

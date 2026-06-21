@@ -11,7 +11,7 @@ namespace TutorialTest;
 
 public class GameLoop : Core
 {
-    private TranslatableGameObject _ballParent;
+    private GameObject _ballParent;
 
     public GameLoop() : base("Tutorial Game", 1920, 1080, false)
     {
@@ -21,7 +21,7 @@ public class GameLoop : Core
 
     protected override void Initialize()
     {
-        _ballParent = GameObject.Translatable("BallParent", GameRoot);
+        _ballParent = GameObject.Create("BallParent", GameRoot);
 
         base.Initialize();
     }
@@ -32,7 +32,7 @@ public class GameLoop : Core
 
         for (int i = 0; i < 10; i++)
         {
-            var ball = GameObject.Translatable($"Ball {i + 1}", _ballParent, new SpriteRenderer(atlas.CreateSprite("uglyredball")));
+            var ball = GameObject.Create($"Ball {i + 1}", _ballParent, new SpriteRenderer(atlas.CreateSprite("uglyredball")));
             ball.Scale = Vector2.One * 3f;
         }
     }
@@ -46,7 +46,7 @@ public class GameLoop : Core
 
         for (var i = 0; i < _ballParent.Children.Count; i++)
         {
-            var child = (TranslatableGameObject)_ballParent.Children[i];
+            var child = _ballParent.Children[i];
             child.Position = new Vector2((i - 4.5f) * 16f * (child.Scale.X + 0.5f), (float)Math.Sin(elapsed * 5f + i) * 20f);
         }
 
