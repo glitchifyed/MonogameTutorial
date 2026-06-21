@@ -30,5 +30,14 @@ namespace GameLibrary.Components
             if (rotation.HasValue)
                 Sprite.Rotation = rotation.Value;
         }
+
+
+        public override void OnUpdate(float deltaTime)
+        {
+            if (Sprite is not AnimatedSprite animatedSprite)
+                return;
+            
+            animatedSprite.Update(deltaTime);
+        }
     }
 }

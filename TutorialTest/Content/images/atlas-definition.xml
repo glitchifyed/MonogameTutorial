@@ -5,4 +5,10 @@
         <Region name="uglyredball" x="0" y="0" width="16" height="16" />
         <Region name="uglyblueball" x="16" y="0" width="16" height="16" />
     </Regions>
+	<Animations>
+		<Animation name="ballanimation" fps="2">
+			<Frame region="uglyredball" />
+			<Frame region="uglyblueball" />
+		</Animation>
+	</Animations>
 </TextureAtlas>

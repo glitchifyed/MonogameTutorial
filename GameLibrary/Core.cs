@@ -143,6 +143,9 @@ public class Core : Game
 
     private void LoopThroughComponents(GameObject gameObject, float deltaTime, Action<ObjectComponent, float> callback)
     {
+        if (!gameObject.Active)
+            return;
+
         foreach (var component in gameObject.Components)
             callback(component, deltaTime);
         

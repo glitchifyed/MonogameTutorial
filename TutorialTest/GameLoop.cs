@@ -32,7 +32,7 @@ public class GameLoop : Core
 
         for (int i = 0; i < 10; i++)
         {
-            var ball = GameObject.Create($"Ball {i + 1}", _ballParent, new SpriteRenderer(atlas.CreateSprite("uglyredball")));
+            var ball = GameObject.Create($"Ball {i + 1}", _ballParent, new SpriteRenderer(atlas.CreateAnimatedSprite("ballanimation")));
             ball.Scale = Vector2.One * 3f;
         }
     }
