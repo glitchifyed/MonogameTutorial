@@ -130,14 +130,29 @@ public class Core : Game
             FixedUpdate(Math.Max(_fixedDeltaTimeMax, deltaTime));
         }
 
+        LoopThroughComponents(GameRoot, deltaTime, PushComponentUpdate);
+
         base.Update(gameTime);
     }
 
+    protected virtual void FixedUpdate(float deltaTime)
+    {
+        LoopThroughComponents(GameRoot, deltaTime, PushComponentFixedUpdate);
+    }
 
-    protected virtual void FixedUpdate(float deltaTime) { }
 
+    private void LoopThroughComponents(GameObject gameObject, float deltaTime, Action<ObjectComponent, float> callback)
+    {
+        foreach (var component in gameObject.Components)
+            callback(component, deltaTime);
+        
+        foreach (var child in gameObject.Children)
+            LoopThroughComponents(child, deltaTime, callback);
+    }
 
-    
+    private void PushComponentUpdate(ObjectComponent component, float deltaTime) => component.OnUpdate(deltaTime);
+    private void PushComponentFixedUpdate(ObjectComponent component, float deltaTime) => component.OnFixedUpdate(deltaTime);
+
 
     protected void DrawSprites(SpriteBatch spriteBatch, GameObject gameObject)
     {

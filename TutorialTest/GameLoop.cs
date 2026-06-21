@@ -61,7 +61,7 @@ public class GameLoop : Core
 
     protected override void FixedUpdate(float deltaTime)
     {
-        
+        base.FixedUpdate(deltaTime);
     }
 
     protected override void Draw(GameTime gameTime)

@@ -21,6 +21,9 @@ namespace GameLibrary.Components
         }
 
 
-        public abstract void OnTranslationUpdate(Vector2? position, Vector2? scale, float? rotation);
+        public virtual void OnTranslationUpdate(Vector2? position, Vector2? scale, float? rotation) { }
+        
+        public virtual void OnUpdate(float deltaTime) { }
+        public virtual void OnFixedUpdate(float fixedDeltaTime) { }
     }
 }
