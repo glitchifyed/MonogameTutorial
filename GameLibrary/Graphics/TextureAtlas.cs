@@ -15,8 +15,8 @@ namespace GameLibrary.Graphics
     {
         public Texture2D Texture { get; set; }
 
-        private Dictionary<string, TextureRegion> _regions { get; } = [];
-        private Dictionary<string, Animation> _animations { get; } = [];
+        private readonly Dictionary<string, TextureRegion> _regions = [];
+        private readonly Dictionary<string, Animation> _animations = [];
 
 
         public TextureAtlas(Texture2D texture)

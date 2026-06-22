@@ -6,6 +6,8 @@ using GameLibrary.Graphics;
 using System;
 using GameLibrary.GameObjects;
 using GameLibrary.Components;
+using GameLibrary.Input;
+using GameLibrary.Input.Enums;
 
 namespace TutorialTest;
 
@@ -13,15 +15,24 @@ public class GameLoop : Core
 {
     private GameObject _ballParent;
 
+    InputAction inputAction = new(new InputBinding(Keys.Space, Buttons.A, MouseBinding.Mouse1));
+
     public GameLoop() : base("Tutorial Game", 1920, 1080, false)
     {
         
+    }
+
+    void OnInputAction(bool pressed, int deviceId)
+    {
+        Console.WriteLine($"{deviceId}: {pressed}");
     }
 
 
     protected override void Initialize()
     {
         _ballParent = GameObject.Create("BallParent", GameRoot);
+
+        InputManager.OnActionPressChanged(inputAction, OnInputAction);
 
         base.Initialize();
     }
@@ -39,7 +50,7 @@ public class GameLoop : Core
 
     protected override void Update(GameTime gameTime)
     {
-        // if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
+        //if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
         //     Exit();
 
         var elapsed = gameTime.TotalGameTime.TotalSeconds;

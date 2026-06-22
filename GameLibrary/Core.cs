@@ -1,6 +1,7 @@
 using System;
 using GameLibrary.Components;
 using GameLibrary.GameObjects;
+using GameLibrary.Input;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
@@ -114,11 +115,15 @@ public class Core : Game
 
         // Create the sprite batch instance.
         SpriteBatch = new SpriteBatch(GraphicsDevice);
+
+        InputManager.Initialize();
     }
 
 
     protected override void Update(GameTime gameTime)
     {
+        InputManager.Update();
+
         var deltaTime = (float)gameTime.ElapsedGameTime.TotalSeconds;
 
         _timeSinceFixedUpdate += deltaTime;
