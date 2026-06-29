@@ -43,31 +43,29 @@ public class GameLoop : Core
 
         for (int i = 0; i < 10; i++)
         {
-            var ball = GameObject.Create($"Ball {i + 1}", _ballParent, new SpriteRenderer(atlas.CreateAnimatedSprite("ballanimation")));
-            ball.Scale = Vector2.One * 3f;
+            var ball = GameObject.Create($"Ball {i + 1}", _ballParent, new SpriteRenderer(atlas.CreateAnimatedSprite("ballanimation").SetPlaybackSpeed(0.5f).OffsetPlaybackTime(i * -0.1f)));
+            ball.Scale = Vector2.One * 2f;
         }
     }
 
-    protected override void Update(GameTime gameTime)
+    protected override void Update(float deltaTime)
     {
         //if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
         //     Exit();
 
-        var elapsed = gameTime.TotalGameTime.TotalSeconds;
-
         for (var i = 0; i < _ballParent.Children.Count; i++)
         {
             var child = _ballParent.Children[i];
-            child.Position = new Vector2((i - 4.5f) * 16f * (child.Scale.X + 0.5f), (float)Math.Sin(elapsed * 5f + i) * 20f);
+            child.Position = new Vector2((i - 4.5f) * 16f * (child.Scale.X + 0.5f), (float)Math.Sin(ElapsedTime * 5f + i) * 20f);
         }
 
         //_ballParent.Position = new Vector2((float)Math.Sin(elapsed * 2.5f) * 100f, 0f);
         //_ballParent.Rotation = (float)(elapsed * 0.25f % 4f * Math.PI * 0.5f);
 
-        Camera.Position = new Vector2((float)elapsed * 10f, 0f);
-        Camera.Zoom = (float)elapsed * 0.1f + 1f;
+        //Camera.Position = new Vector2((float)elapsed * 10f, 0f);
+        //Camera.Zoom = (float)elapsed * 0.1f + 1f;
 
-        base.Update(gameTime);
+        base.Update(deltaTime);
     }
 
     protected override void FixedUpdate(float deltaTime)

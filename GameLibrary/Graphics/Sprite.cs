@@ -38,7 +38,9 @@ namespace GameLibrary.Graphics
                 return;
 
             var screenScale = Core.ScreenScale * camera.Zoom;
+            //var spriteScale = Math.Min(Core.VirtualScreenWidth, Core.VirtualScreenHeight) / (Math.Min(Region.Width, Region.Height) * 16f);
 
+            //Region.Draw(spriteBatch, (Vector2.Rotate(Position, -camera.GlobalRotation) - camera.GlobalPosition) * screenScale, new Vector2(Origin.X * Region.Width, Origin.Y * Region.Height), Color, Scale * (spriteScale * screenScale), Rotation - camera.GlobalRotation, Depth, Effects);
             Region.Draw(spriteBatch, (Vector2.Rotate(Position, -camera.GlobalRotation) - camera.GlobalPosition) * screenScale, new Vector2(Origin.X * Region.Width, Origin.Y * Region.Height), Color, Scale * screenScale, Rotation - camera.GlobalRotation, Depth, Effects);
         }
     }

@@ -24,6 +24,8 @@ namespace GameLibrary.Graphics
 
         public int CurrentFrame { get; private set; }
 
+        public float PlaybackSpeed { get; private set; } = 1f;
+
         private float _timeSinceLastFrame;
 
 
@@ -36,7 +38,7 @@ namespace GameLibrary.Graphics
             if (Animation == null)
                 return;
 
-            _timeSinceLastFrame += deltaTime;
+            _timeSinceLastFrame += deltaTime * PlaybackSpeed;
 
             if (_timeSinceLastFrame >= Animation.FrameDelay)
             {
@@ -48,6 +50,21 @@ namespace GameLibrary.Graphics
 
                 Region = Animation.Frames[CurrentFrame];
             }
+        }
+
+
+        public AnimatedSprite SetPlaybackSpeed(float speed)
+        {
+            PlaybackSpeed = speed;
+
+            return this;
+        }
+
+        public AnimatedSprite OffsetPlaybackTime(float timeOffset)
+        {
+            _timeSinceLastFrame += timeOffset;
+
+            return this;
         }
     }
 }

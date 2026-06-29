@@ -48,6 +48,8 @@ public class Core : Game
     public static GameObject GameRoot { get; private set; }
     public static Camera Camera { get; private set; }
 
+    public static float ElapsedTime;
+
     private static float _timeSinceFixedUpdate { get; set; }
     private static float _fixedDeltaTimeMax { get; } = 1f / 60f;
 
@@ -122,9 +124,18 @@ public class Core : Game
 
     protected override void Update(GameTime gameTime)
     {
-        InputManager.Update();
-
         var deltaTime = (float)gameTime.ElapsedGameTime.TotalSeconds;
+
+        Update(deltaTime);
+
+        base.Update(gameTime);
+    }
+
+    protected virtual void Update(float deltaTime)
+    {
+        ElapsedTime += deltaTime;
+
+        InputManager.Update();
 
         _timeSinceFixedUpdate += deltaTime;
 
@@ -136,8 +147,6 @@ public class Core : Game
         }
 
         LoopThroughComponents(GameRoot, deltaTime, PushComponentUpdate);
-
-        base.Update(gameTime);
     }
 
     protected virtual void FixedUpdate(float deltaTime)
