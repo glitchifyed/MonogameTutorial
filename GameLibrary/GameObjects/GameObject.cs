@@ -32,9 +32,13 @@ namespace GameLibrary.GameObjects
                 field?._children.Remove(this);
                 value?._children.Add(this);
 
-                OnParentChanged(field, value);
+                GlobalPosition = (value?.GlobalPosition ?? Vector2.Zero) + Position;
+                GlobalScale = (value?.GlobalScale ?? Vector2.Zero) + Scale;
+                GlobalRotation = (value?.GlobalRotation ?? 0f) + Rotation;
 
                 field = value;
+
+                OnParentChanged(field, value);
             }
         }
 
