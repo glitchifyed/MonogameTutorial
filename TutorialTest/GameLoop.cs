@@ -59,7 +59,7 @@ public class GameLoop : Core
             child.Position = new Vector2((i - 4.5f) * 16f * (child.Scale.X + 0.5f), (float)Math.Sin(ElapsedTime * 5f + i) * 20f);
         }
 
-        //_ballParent.Position = new Vector2((float)Math.Sin(elapsed * 2.5f) * 100f, 0f);
+        _ballParent.Position = new Vector2((float)Math.Sin(ElapsedTime * 2.5f) * 100f, 0f);
         //_ballParent.Rotation = (float)(elapsed * 0.25f % 4f * Math.PI * 0.5f);
 
         //Camera.Position = new Vector2((float)elapsed * 10f, 0f);

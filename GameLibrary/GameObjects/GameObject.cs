@@ -43,33 +43,96 @@ namespace GameLibrary.GameObjects
 
 
         // Translation components
+        public Vector2 GlobalPosition
+        {
+            get;
+
+            set
+            {
+                if (field == value)
+                    return;
+                
+                field = value;
+
+                OnTranslationUpdate();
+            }
+        }
+        public Vector2 GlobalScale
+        {
+            get;
+
+            set
+            {
+                if (field == value)
+                    return;
+                
+                field = value;
+
+                OnTranslationUpdate();
+            }
+        }
+        public float GlobalRotation
+        {
+            get;
+
+            set
+            {
+                if (field == value)
+                    return;
+                
+                field = value;
+
+                OnTranslationUpdate();
+            }
+        }
+
         public Vector2 Position
         {
-            get;
+            get
+                => Parent == null ? GlobalPosition : GlobalPosition - Parent.GlobalPosition;
 
-            set => SetTranslationProperty(ref field, value);
-        } = Vector2.Zero;
+            set
+            {
+                if (field == value)
+                    return;
+                
+                var parentPosition = Parent?.GlobalPosition ?? Vector2.Zero;
+
+                GlobalPosition = parentPosition + value;
+            }
+        }
+
         public Vector2 Scale
         {
-            get;
+            get
+                => Parent == null ? GlobalScale : GlobalScale - Parent.GlobalScale;
 
-            set => SetTranslationProperty(ref field, value);
-        } = Vector2.One;
-        
+            set
+            {
+                if (field == value)
+                    return;
+                
+                var parentScale = Parent?.GlobalScale ?? Vector2.Zero;
+
+                GlobalScale = parentScale + value;
+            }
+        }
+
         public float Rotation
         {
-            get;
+            get
+                => Parent == null ? GlobalRotation : GlobalRotation - Parent.GlobalRotation;
 
-            set => SetTranslationProperty(ref field, value);
-        } = 0f;
+            set
+            {
+                if (field == value)
+                    return;
+                
+                var parentRotation = Parent?.GlobalRotation ?? 0f;
 
-        public Vector2 AncestralPosition { get; private set; } = Vector2.Zero;
-        public Vector2 AncestralScale { get; private set; } = Vector2.One;
-        public float AncestralRotation { get; private set; } = 0f;
-
-        public Vector2 GlobalPosition { get; private set; } = Vector2.Zero;
-        public Vector2 GlobalScale { get; private set; } = Vector2.One;
-        public float GlobalRotation { get; private set; } = 0f;
+                GlobalRotation = parentRotation + value;
+            }
+        }
 
 
         public static T Create<T>(string name = "New GameObject", GameObject parent = null, params ObjectComponent[] components) where T : GameObject
@@ -180,31 +243,13 @@ namespace GameLibrary.GameObjects
 
 
         // Translation
-        private void UpdateGlobalTranslation(Vector2 parentalPosition, Vector2 parentalScale, float parentalRotation)
+        private void OnTranslationUpdate()
         {
-            AncestralPosition = parentalPosition;
-            AncestralScale = parentalScale;
-            AncestralRotation = parentalRotation;
-
-            GlobalPosition = parentalPosition + Vector2.Rotate(Position * parentalScale, parentalRotation);
-            GlobalScale = parentalScale * Scale;
-            GlobalRotation = parentalRotation + Rotation;
-
             foreach (var component in Components)
                 component.OnTranslationUpdate(GlobalPosition, GlobalScale, GlobalRotation);
 
             foreach (var child in _children)
-                child.UpdateGlobalTranslation(GlobalPosition, GlobalScale, GlobalRotation);
-        }
-
-        private void SetTranslationProperty<T>(ref T field, T value)
-        {
-            if (EqualityComparer<T>.Default.Equals(field, value))
-                return;
-            
-            field = value;
-
-            UpdateGlobalTranslation(AncestralPosition, AncestralScale, AncestralRotation);
+                child.OnTranslationUpdate();
         }
     }
 }
